@@ -1,0 +1,81 @@
+version: '3.2'
+services:
+    nginx:
+        build: docker/nginx
+#            context: ./
+#            dockerfile: ./docker/web/Dockerfile
+        ports:
+            - 8080:80
+            - 8082:443
+        restart: always
+        container_name: watches_nginx
+        extra_hosts:
+            - "watches.loc:127.0.0.1"
+        domainname: watches.loc
+        environment:
+            VIRTUAL_HOST: watches.loc
+        volumes:
+            - ~/var/www:/var/www:ro
+        depends_on:
+            - chrometesting
+        networks:
+            - front-tier
+            - back-tier
+    php:
+        build: docker/php
+        restart: always
+        container_name: watches_php
+        volumes:
+            - ./:/var/www
+        networks:
+            - front-tier
+            - back-tier
+    mysql:
+        build: docker/db
+        restart: always
+        container_name: watches_db
+        env_file:
+            - ".env"
+        volumes:
+            - mysql:/var/lib/mysql
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+        ports:
+            - "3306:3306"
+        networks:
+            - back-tier
+
+    cache:
+        image: redis:latest
+        ports:
+            - "63791:6379"
+
+#    chrometesting:
+#        hostname: chrometesting
+#        image: selenium/standalone-chrome-debug:3.4.0
+#        environment:
+#            no_proxy: localhost
+#            HUB_ENV_no_proxy: localhost
+#        ports:
+#            # Port is used for VNC only
+#            - "5900:5900"
+#            - "4444"
+#            - "9515"
+#        external_links:
+#            - watches_php:watches.loc
+#            - watches_nginx:watches.loc
+#        networks:
+#            - front-tier
+#            - back-tier
+volumes:
+    mysql:
+        driver: local
+
+networks:
+    front-tier:
+      driver: bridge
+    back-tier:
+      driver: bridge
