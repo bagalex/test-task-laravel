@@ -1,0 +1,34 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/var/www
+    steps:
+      - checkout
+      - run: cp .env.example .env
+      - run:
+          name: Setup docker
+          command: |
+            docker-compose build
+            docker-compose up -d
+            docker-compose run php composer install -n --optimize-autoloader
+      - run:
+          name: Setup Laravel
+          command: |
+            docker-compose run php php artisan key:generate
+            docker-compose run php php artisan cache:clear
+            docker-compose run php php artisan view:clear
+            docker-compose run php php artisan route:clear
+            docker-compose run php php artisan config:clear
+            docker-compose run php php artisan migrate:fresh --env=testing --force --seed
+#      - run: touch storage/testing.sqlite
+#      - run: docker-compose run php artisan migrate --env=testing --database=sqlite_testing --force
+      - run:
+          name: Run Test
+          command: |
+            docker-compose run php vendor/bin/phpunit
+#- run: php artisan dusk
