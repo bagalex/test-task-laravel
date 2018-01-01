@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.13 on 2017-09-25.
+ * Generated for Laravel 5.5.28 on 2018-01-01.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -375,6 +375,18 @@ namespace Illuminate\Support\Facades {
         public static function getProvider($provider)
         {
             return \Illuminate\Foundation\Application::getProvider($provider);
+        }
+        
+        /**
+         * Get the registered service provider instances if any exist.
+         *
+         * @param \Illuminate\Support\ServiceProvider|string $provider
+         * @return array 
+         * @static 
+         */ 
+        public static function getProviders($provider)
+        {
+            return \Illuminate\Foundation\Application::getProviders($provider);
         }
         
         /**
@@ -1873,7 +1885,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the session store used by the guard.
          *
-         * @return \Illuminate\Contracts\Session\Session. 
+         * @return \Illuminate\Contracts\Session\Session 
          * @static 
          */ 
         public static function getSession()
@@ -3228,7 +3240,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the cookies which have been queued for the next request.
          *
-         * @return array 
+         * @return \Symfony\Component\HttpFoundation\Cookie[] 
          * @static 
          */ 
         public static function getQueuedCookies()
@@ -4758,7 +4770,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $directory
          * @param bool $hidden
-         * @return array 
+         * @return \Symfony\Component\Finder\SplFileInfo[] 
          * @static 
          */ 
         public static function files($directory, $hidden = false)
@@ -4771,7 +4783,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $directory
          * @param bool $hidden
-         * @return array 
+         * @return \Symfony\Component\Finder\SplFileInfo[] 
          * @static 
          */ 
         public static function allFiles($directory, $hidden = false)
@@ -5226,7 +5238,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param array $replace
          * @param string $locale
-         * @return string 
+         * @return string|array|null 
          * @static 
          */ 
         public static function getFromJson($key, $replace = array(), $locale = null)
@@ -6652,6 +6664,43 @@ namespace Illuminate\Support\Facades {
         {
             \Illuminate\Routing\Redirector::setSession($session);
         }
+        
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @return void 
+         * @static 
+         */ 
+        public static function macro($name, $macro)
+        {
+            \Illuminate\Routing\Redirector::macro($name, $macro);
+        }
+        
+        /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @return void 
+         * @static 
+         */ 
+        public static function mixin($mixin)
+        {
+            \Illuminate\Routing\Redirector::mixin($mixin);
+        }
+        
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasMacro($name)
+        {
+            return \Illuminate\Routing\Redirector::hasMacro($name);
+        }
          
     }
 
@@ -6747,7 +6796,7 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Get the current encoded path info for the request.
+         * Get the current decoded path info for the request.
          *
          * @return string 
          * @static 
@@ -6887,24 +6936,24 @@ namespace Illuminate\Support\Facades {
          * Merge new input into the current request's input array.
          *
          * @param array $input
-         * @return void 
+         * @return \Illuminate\Http\Request 
          * @static 
          */ 
         public static function merge($input)
         {
-            \Illuminate\Http\Request::merge($input);
+            return \Illuminate\Http\Request::merge($input);
         }
         
         /**
          * Replace the input for the current request.
          *
          * @param array $input
-         * @return void 
+         * @return \Illuminate\Http\Request 
          * @static 
          */ 
         public static function replace($input)
         {
-            \Illuminate\Http\Request::replace($input);
+            return \Illuminate\Http\Request::replace($input);
         }
         
         /**
@@ -7373,8 +7422,8 @@ namespace Illuminate\Support\Facades {
          * 
          * Order of precedence: PATH (routing placeholders or custom attributes), GET, BODY
          *
-         * @param string $key the key
-         * @param mixed $default the default value if the parameter key does not exist
+         * @param string $key The key
+         * @param mixed $default The default value if the parameter key does not exist
          * @return mixed 
          * @static 
          */ 
@@ -8007,6 +8056,24 @@ namespace Illuminate\Support\Facades {
         {
             //Method inherited from \Symfony\Component\HttpFoundation\Request            
             return \Illuminate\Http\Request::isMethodCacheable();
+        }
+        
+        /**
+         * Returns the protocol version.
+         * 
+         * If the application is behind a proxy, the protocol version used in the
+         * requests between the client and the proxy and between the proxy and the
+         * server might be different. This returns the former (from the "Via" header)
+         * if the proxy is trusted (see "setTrustedProxies()"), otherwise it returns
+         * the latter (from the "SERVER_PROTOCOL" server parameter).
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getProtocolVersion()
+        {
+            //Method inherited from \Symfony\Component\HttpFoundation\Request            
+            return \Illuminate\Http\Request::getProtocolVersion();
         }
         
         /**
@@ -8987,7 +9054,19 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Route an api resource to a controller.
+         * Register an array of API resource controllers.
+         *
+         * @param array $resources
+         * @return void 
+         * @static 
+         */ 
+        public static function apiResources($resources)
+        {
+            \Illuminate\Routing\Router::apiResources($resources);
+        }
+        
+        /**
+         * Route an API resource to a controller.
          *
          * @param string $name
          * @param string $controller
@@ -10568,6 +10647,35 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Create a streamed response for a given file.
+         *
+         * @param string $path
+         * @param string|null $name
+         * @param array|null $headers
+         * @param string|null $disposition
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse 
+         * @static 
+         */ 
+        public static function response($path, $name = null, $headers = array(), $disposition = 'inline')
+        {
+            return \Illuminate\Filesystem\FilesystemAdapter::response($path, $name, $headers, $disposition);
+        }
+        
+        /**
+         * Create a streamed download response for a given file.
+         *
+         * @param string $path
+         * @param string|null $name
+         * @param array|null $headers
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse 
+         * @static 
+         */ 
+        public static function download($path, $name = null, $headers = array())
+        {
+            return \Illuminate\Filesystem\FilesystemAdapter::download($path, $name, $headers);
+        }
+        
+        /**
          * Write the contents of a file.
          *
          * @param string $path
@@ -10784,7 +10892,7 @@ namespace Illuminate\Support\Facades {
          * @param \League\Flysystem\Rackspace\RackspaceAdapter $adapter
          * @param string $path
          * @param \DateTimeInterface $expiration
-         * @param $options
+         * @param array $options
          * @return string 
          * @static 
          */ 
@@ -10865,6 +10973,17 @@ namespace Illuminate\Support\Facades {
         public static function deleteDirectory($directory)
         {
             return \Illuminate\Filesystem\FilesystemAdapter::deleteDirectory($directory);
+        }
+        
+        /**
+         * Flush the Flysystem cache.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function flushCache()
+        {
+            \Illuminate\Filesystem\FilesystemAdapter::flushCache();
         }
         
         /**
