@@ -28,5 +28,10 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(DuskServiceProvider::class);
             $this->app->register(DuskBrowserServiceProvider::class);
         }
+
+        $this->app->bind(
+            'App\Service\Request\RequestInterface',
+            'App\Service\Request\GuzzleRequest'
+        );
     }
 }
